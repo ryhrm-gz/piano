@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { DEFAULT_KEY_RANGE } from './constants';
-import { Note, PianoOptions, PianoApi } from './types';
+import { PianoOptions, PianoApi, KeyboardNote, Note } from './types';
 import { createKeysInRange } from './utils/create-keys-in-range';
 import { getKeyName } from './utils/get-key-name';
 import { Note as TonalNote } from 'tonal';
@@ -24,29 +24,42 @@ export const usePiano = (_options?: PianoOptions): PianoApi => {
     [keyRangeNames]
   );
 
-  const handleKeyDown = (key: string) => {
-    setActiveKeys((prev) => [...prev, key]);
-  };
+  const handleKeyDown = useCallback(
+    (note: Note) => {
+      const key = note.name;
+      setActiveKeys((prev) => [...prev, key]);
+      options.onKeyDown(note);
+    },
+    [options]
+  );
 
-  const handleKeyUp = (key: string) => {
-    setActiveKeys((prev) => prev.filter((k) => k !== key));
-  };
+  const handleKeyUp = useCallback(
+    (note: Note) => {
+      const key = note.name;
+      setActiveKeys((prev) => prev.filter((k) => k !== key));
+      options.onKeyUp(note);
+    },
+    [options]
+  );
 
-  const keyboard: Note[] = useMemo(
+  const keyboard: KeyboardNote[] = useMemo(
     () =>
       keysInRange.map((key) => {
-        const note = TonalNote.get(key);
-        return {
-          name: note.name,
-          midi: note.midi ?? 0,
-          freq: note.freq ?? 0,
+        const tonalNote = TonalNote.get(key);
+        const note: Note = {
+          name: tonalNote.name,
+          midi: tonalNote.midi ?? 0,
+          freq: tonalNote.freq ?? 0,
           isActive: activeKeys.includes(key),
-          type: note.alt === 0 ? 'white' : 'black',
-          handleKeyDown: () => handleKeyDown(key),
-          handleKeyUp: () => handleKeyUp(key),
+          type: tonalNote.alt === 0 ? 'white' : 'black',
+        };
+        return {
+          ...note,
+          handleKeyDown: () => handleKeyDown(note),
+          handleKeyUp: () => handleKeyUp(note),
         };
       }),
-    [activeKeys, keysInRange]
+    [activeKeys, handleKeyDown, handleKeyUp, keysInRange]
   );
 
   return {

@@ -1,4 +1,4 @@
-export type Note = {
+export type KeyboardNote = {
   name: string;
   midi: number;
   freq: number;
@@ -7,6 +7,8 @@ export type Note = {
   handleKeyDown: () => void;
   handleKeyUp: () => void;
 };
+
+export type Note = Omit<KeyboardNote, 'handleKeyDown' | 'handleKeyUp'>;
 
 export type KeyRange = [string | number, string | number];
 
@@ -22,7 +24,7 @@ export type PianoOptions = {
 };
 
 export type PianoApi = {
-  keyboard: Note[];
+  keyboard: KeyboardNote[];
 };
 
 export type PianoStyles = {
@@ -104,7 +106,7 @@ export type KeyStyles = {
 };
 
 export type PianoProps = {
-  keyboard: Note[];
+  keyboard: KeyboardNote[];
   pianoStyles?: PianoStyles;
   keyStyles?: KeyStyles;
 };
