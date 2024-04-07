@@ -1,30 +1,49 @@
-# React + TypeScript + Vite
+# @ryhrm-gz/Piano
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React hooks and components for piano.
 
-Currently, two official plugins are available:
+## usePiano
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```tsx
+const { keyboard } = usePiano({
+  keyRange,
+  onKeyDown,
+  onKeyUp,
+});
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### Options
+
+- `keyRange: [string | number, string | number]`
+  - Default: `['C3', 'G5']`
+  - The range of keys to be displayed.
+- `onKeyDown: (note: Note) => void`
+  - Default: `() => {}`
+  - A callback function that is called when a key is pressed.
+- `onKeyUp: (note: Note) => void`
+  - Default: `() => {}`
+  - A callback function that is called when a key is released.
+
+## Piano
+
+```tsx
+<Piano
+  keyboard={keyboard}
+  pianoStyles={{
+    direction,
+    keyGap,
+  }}
+  keyStyles={{
+    keyWidth,
+    keyHeight,
+    whiteKeyColor,
+    whiteKeyActiveColor,
+    whiteKeyBorderColor,
+    whiteKeyBorderRadius,
+    blackKeyColor,
+    blackKeyActiveColor,
+    blackKeyBorderColor,
+    blackKeyBorderRadius,
+  }}
+/>
+```
