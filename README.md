@@ -1,4 +1,4 @@
-# @ryhrm-gz/Piano
+# @ryhrm-gz/piano
 
 React hooks and components for piano.
 
